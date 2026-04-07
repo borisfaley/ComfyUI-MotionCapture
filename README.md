@@ -81,19 +81,16 @@ curl -L -o eigen-3.4.0.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eig
 tar -xf eigen-3.4.0.zip -C thirdparty
 ```
 
-Перед сборкой нужно пропатчить файлы (заменить `.type()` на `.scalar_type()`):
-
-- `dpvo/altcorr/correlation_kernel.cu` — 4 замены (`fmap1.type()` и `net.type()`)
-- `dpvo/lietorch/src/lietorch_gpu.cu` — все `a.type()` и `X.type()`
-- `dpvo/lietorch/src/lietorch_cpu.cpp` — все `a.type()` и `X.type()`
-- `dpvo/lietorch/include/dispatch.h` — убрать `::detail::scalar_type(the_type)`, заменить на просто `TYPE`
-
-Затем собрать из Developer Command Prompt for VS 2022:
+Запустите скрипт патчинга из этого репозитория и соберите из Developer Command Prompt for VS 2022:
 
 ```powershell
+ComfyUI\custom_nodes\ComfyUI-MotionCapture\patch_dpvo.bat C:\путь\к\DPVO
+cd C:\путь\к\DPVO
 set DISTUTILS_USE_SDK=1
 pip install . --no-build-isolation
 ```
+
+Скрипт автоматически заменит устаревший API `.type()` на `.scalar_type()` во всех необходимых CUDA-файлах.
 
 Если DPVO не собирается — не критично. Нода будет работать с SimpleVO вместо DPVO.
 
